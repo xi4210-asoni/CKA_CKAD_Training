@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres-vol
+spec:
+  selector:
+    matchLabels:
+      app: postgres-vol
+  serviceName: postgres-vol
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: postgres-vol
+    spec:
+      containers:
+      - name: postgres-db
+        image: postgres:15.1-alpine
+        env:
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: pg-password
+              key: POSTGRES_PASSWORD
+        ports:
+        - containerPort: 5432
+          name: postgres
+        volumeMounts:
+        - name: postgres-data
+          mountPath: /var/lib/postgresql/data
+        - name: postgres-config
+          mountPath: /etc/postgresql/postgresql.conf
+          subPath: postgresql.conf
+      volumes:
+      - name: postgres-data
+        # emptyDir: {}      //?Gives Epheremeral storage
+        hostPath:
+          path: /root/work/K8sRegularTrainingTasks/Task2_K8s_management/kubernetes/data
+      - name: postgres-config
+        configMap:
+          name: postgres-config
