@@ -1,7 +1,8 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: javawebappdeploy
+  name: {{ .Release.Name }}-javawebappdeploy
+  namespace: {{.Values.namespace}}
 spec:
   replicas: 3
   selector:
@@ -14,7 +15,8 @@ spec:
     spec:
       containers:
         - name: javawebappcontainer
-          image: xi4210asoni/java-web-server:0.1.0
+          image: {{.Values.imagename}}:{{.Values.imagetag}}
+          imagePullPolicy: {{.Values.pullpolicy}}
           env:
             - name: POSTGRES_HOST
               value: postgresql
@@ -23,94 +25,73 @@ spec:
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: conn-secret
+                  name: {{ .Release.Name }}-connsecret
                   key: POSTGRES_PASSWORD
             - name: CONN
               valueFrom:
                 secretKeyRef:
-                  name: conn-secret
+                  name: {{ .Release.Name }}-connsecret
                   key: POSTGRES_CONN
-          # resources:
-          #   limits: 
-          #     memory: 20Mi
-          #   requests:
-          #     memory: 10Mi
           ports:
             - containerPort: 8080
       volumes:
         - name: config-volume
           configMap:
             name: java-webapp-configs
-      # limits:
-      # resources:
-      #   limits: 
-      #     memory: 20Mi
-      #   requests:
-      #     memory: 10Mi
-
-
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: javawebappsvc
+  name: {{ .Release.Name }}-javawebappsvc
+  namespace: {{.Values.namespace}}
 spec:
   selector:
     app: javawebapp
   ports:
     - port: 8080 
-    # - name: http
-    #   port: 80
-    #   targetPort: 8080
-  # type: LoadBalancer
-
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: postgresql-deployment
+  name: postgresql
+  namespace: {{.Values.namespace}}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: postgresql-pod
+      app: postgresql
   template:
     metadata:
       labels:
-        app: postgresql-pod
+        app: postgresql
     spec:
       containers:
-        - name: postgresql-container
+        - name: postgresql
           image: postgres
+          imagePullPolicy: {{.Values.pullpolicy}}
           env:
             - name: POSTGRES_USER
               value: "postgres"
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: conn-secret
+                  name: {{ .Release.Name }}-connsecret
                   key: POSTGRES_PASSWORD
-            # - name: POSTGRES_DB
-            #   value: mydb
           ports:
             - containerPort: 5432
-#           volumeMounts:
-#             - name: postgresql-volume
-#               mountPath: /var/lib/postgresql/data
-#       volumes:
-#         - name: postgresql-volume
-#           persistentVolumeClaim:
-#             claimName: postgresql-pvc
-
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: postgresqlsvc
+  name: {{ .Release.Name }}-postgresql
+  namespace: {{.Values.namespace}}
 spec:
   selector:
-    app: postgresql-deployment
+    app: postgresql
   ports:
-    - name: postgresql-deployment
+    - name: postgresql
       port: 5432
       targetPort: 5432
+  type: ClusterIP
+
+

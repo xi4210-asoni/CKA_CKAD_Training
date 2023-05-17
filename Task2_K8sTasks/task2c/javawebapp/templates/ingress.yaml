@@ -2,6 +2,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: nginx-postgres
+  namespace: {{.Values.namespace}}
 spec:
   ingressClassName: nginx
   rules:
@@ -12,6 +13,6 @@ spec:
         path: /web-app
         backend:
           service:
-            name: javawebappsvc
+            name: {{ .Release.Name }}-javawebappsvc
             port: 
               number: 8080
