@@ -9,9 +9,9 @@ spec:
   - http:
       paths:
       - pathType: Prefix
-        path: /web-app
+        path: /
         backend:
           service:
-            name: {{ .Release.Name }}-javawebappsvc
+            name: {{ .Release.Name }}-webappsvc
             port: 
               number: 8080

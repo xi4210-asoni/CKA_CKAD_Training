@@ -7,19 +7,19 @@ spec:
   replicas: 3
   selector:
     matchLabels:
-      app: javawebapp
+      app: webapp
   template:
     metadata:
       labels:
-        app: javawebapp
+        app: webapp
     spec:
       containers:
-        - name: javawebappcontainer
+        - name: webappcontainer
           image: {{.Values.imagename}}:{{.Values.imagetag}}
           imagePullPolicy: {{.Values.pullpolicy}}
           env:
             - name: POSTGRES_HOST
-              value: postgresql
+              value: {{ .Release.Name }}-postgresql
             - name: POSTGRES_USER
               value: "postgres"
             - name: POSTGRES_PASSWORD
@@ -37,23 +37,23 @@ spec:
       volumes:
         - name: config-volume
           configMap:
-            name: java-webapp-configs
+            name: {{ .Release.Name }}-java-webapp-configmap
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Release.Name }}-javawebappsvc
+  name: {{ .Release.Name }}-webappsvc
   namespace: {{.Values.namespace}}
 spec:
   selector:
-    app: javawebapp
+    app: webapp
   ports:
     - port: 8080 
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: postgresql
+  name: postgresql-deploy
   namespace: {{.Values.namespace}}
 spec:
   replicas: 1
@@ -66,7 +66,7 @@ spec:
         app: postgresql
     spec:
       containers:
-        - name: postgresql
+        - name: postgresqlcontainer
           image: postgres
           imagePullPolicy: {{.Values.pullpolicy}}
           env:
@@ -79,6 +79,14 @@ spec:
                   key: POSTGRES_PASSWORD
           ports:
             - containerPort: 5432
+          volumeMounts:
+          - name: postgres-config
+            mountPath: /etc/postgresql/postgresql.conf
+            subPath: postgresql.conf
+      volumes:
+      - name: postgres-config
+        configMap:
+          name: {{ .Release.Name }}-java-webapp-configmap
 ---
 apiVersion: v1
 kind: Service

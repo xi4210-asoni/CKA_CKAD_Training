@@ -83,5 +83,5 @@ affinity: {}
 
 namespace: default
 imagename: xi4210asoni/java-web-server
-imagetag: 0.1.0
+imagetag: 0.1.1
 pullpolicy: IfNotPresent
