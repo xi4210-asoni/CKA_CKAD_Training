@@ -33,7 +33,7 @@ spec:
           subPath: postgresql.conf
       volumes:
       - name: postgres-data
-        # emptyDir: {}      //?Gives Epheremeral storage
+        # emptyDir: {}      //?Gives Epheremeral storage - puts data in /tmp directory - but data delete after pod delets
         hostPath:
           path: /root/work/K8sRegularTrainingTasks/Task2_K8s_management/kubernetes/data
       - name: postgres-config
