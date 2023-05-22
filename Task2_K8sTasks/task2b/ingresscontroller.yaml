@@ -5,13 +5,12 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: demo.localdeva.me
-    http:
+   - http:
       paths:
       - pathType: Prefix
-        path: /web-app
+        path: /
         backend:
           service:
-            name: javawebappsvc
+            name: web-appsvc
             port: 
               number: 8080

@@ -1,9 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: javawebappdeploy
+  name: web-app
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: javawebapp
@@ -14,10 +14,10 @@ spec:
     spec:
       containers:
         - name: javawebappcontainer
-          image: xi4210asoni/java-web-server:0.1.0
+          image: xi4210asoni/java-web-server:0.1.1
           env:
             - name: POSTGRES_HOST
-              value: postgresql
+              value: postgresqlsvc
             - name: POSTGRES_USER
               value: "postgres"
             - name: POSTGRES_PASSWORD
@@ -30,40 +30,19 @@ spec:
                 secretKeyRef:
                   name: conn-secret
                   key: POSTGRES_CONN
-          # resources:
-          #   limits: 
-          #     memory: 20Mi
-          #   requests:
-          #     memory: 10Mi
           ports:
             - containerPort: 8080
-      volumes:
-        - name: config-volume
-          configMap:
-            name: java-webapp-configs
-      # limits:
-      # resources:
-      #   limits: 
-      #     memory: 20Mi
-      #   requests:
-      #     memory: 10Mi
-
-
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: javawebappsvc
+  name: web-appsvc
 spec:
   selector:
     app: javawebapp
   ports:
     - port: 8080 
-    # - name: http
-    #   port: 80
-    #   targetPort: 8080
-  # type: LoadBalancer
-
+      targetPort: 8080
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -90,18 +69,16 @@ spec:
                 secretKeyRef:
                   name: conn-secret
                   key: POSTGRES_PASSWORD
-            # - name: POSTGRES_DB
-            #   value: mydb
           ports:
             - containerPort: 5432
-#           volumeMounts:
-#             - name: postgresql-volume
-#               mountPath: /var/lib/postgresql/data
-#       volumes:
-#         - name: postgresql-volume
-#           persistentVolumeClaim:
-#             claimName: postgresql-pvc
-
+          volumeMounts:
+          - name: postgres-config
+            mountPath: /etc/postgresql/postgresql.conf
+            subPath: postgresql.conf
+      volumes:
+      - name: postgres-config
+        configMap:
+          name: java-webapp-configs
 ---
 apiVersion: v1
 kind: Service
@@ -109,8 +86,7 @@ metadata:
   name: postgresqlsvc
 spec:
   selector:
-    app: postgresql-deployment
+    app: postgresql-pod
   ports:
-    - name: postgresql-deployment
-      port: 5432
+    - port: 5432
       targetPort: 5432
