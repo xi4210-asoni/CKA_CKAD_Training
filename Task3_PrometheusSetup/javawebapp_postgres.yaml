@@ -1,0 +1,97 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: javawebapp
+  template:
+    metadata:
+      labels:
+        app: javawebapp
+    spec:
+      containers:
+        - name: javawebappcontainer
+          image: xi4210asoni/java-web-server:0.1.2
+          env:
+            - name: POSTGRES_HOST
+              value: postgresqlsvc
+            - name: POSTGRES_USER
+              value: "postgres"
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: conn-secret
+                  key: POSTGRES_PASSWORD
+            - name: CONN
+              valueFrom:
+                secretKeyRef:
+                  name: conn-secret
+                  key: POSTGRES_CONN
+          ports:
+            - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-appsvc
+  labels:
+    job: java-api
+    app: javawebapp
+spec:
+  selector:
+    app: javawebapp
+  ports:
+    - name: web
+      protocol: TCP
+      port: 8080 
+      targetPort: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgresql-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgresql-pod
+  template:
+    metadata:
+      labels:
+        app: postgresql-pod
+    spec:
+      containers:
+        - name: postgresql-container
+          image: postgres
+          env:
+            - name: POSTGRES_USER
+              value: "postgres"
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: conn-secret
+                  key: POSTGRES_PASSWORD
+          ports:
+            - containerPort: 5432
+          volumeMounts:
+          - name: postgres-config
+            mountPath: /etc/postgresql/postgresql.conf
+            subPath: postgresql.conf
+      volumes:
+      - name: postgres-config
+        configMap:
+          name: java-webapp-configs
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgresqlsvc
+spec:
+  selector:
+    app: postgresql-pod
+  ports:
+    - port: 5432
+      targetPort: 5432

@@ -1,0 +1,13 @@
+
+Stateful set - prometheus server details - added configmap and secrets in here
+k describe statefulset prometheus-prometheus-operator-kube-p-prometheus > prometheus.yaml
+kubectl describe secrets prometheus-prometheus-operator-kube-p-prometheus
+
+k describe cm prometheus-prometheus-operator-kube-p-prometheus-rulefiles-0 > rules.yaml
+k get crd 
+
+
+For creating service monitor crds
+It needs to point to the service we have exposed 
+For the service monitor to actually -  give lables of the service used + port name
+
