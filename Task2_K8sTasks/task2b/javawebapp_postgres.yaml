@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: javawebappcontainer
-          image: xi4210asoni/java-web-server:0.1.1
+          image: xi4210asoni/java-web-server:0.1.2
           env:
             - name: POSTGRES_HOST
               value: postgresqlsvc
