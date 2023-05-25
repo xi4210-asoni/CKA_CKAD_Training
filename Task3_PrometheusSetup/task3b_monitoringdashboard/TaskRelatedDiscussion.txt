@@ -1,0 +1,25 @@
+# In the /actuator/prometheus endpoint
+
+# HELP jvm_memory_used_bytes The amount of used memory
+# TYPE jvm_memory_used_bytes gauge
+jvm_memory_used_bytes{area="heap",id="Tenured Gen",} 2.1989544E7
+jvm_memory_used_bytes{area="nonheap",id="CodeHeap 'profiled nmethods'",} 8337664.0
+jvm_memory_used_bytes{area="heap",id="Eden Space",} 1.7992432E7
+jvm_memory_used_bytes{area="nonheap",id="Metaspace",} 5.154548E7
+jvm_memory_used_bytes{area="nonheap",id="CodeHeap 'non-nmethods'",} 1297152.0
+jvm_memory_used_bytes{area="heap",id="Survivor Space",} 1076088.0
+jvm_memory_used_bytes{area="nonheap",id="Compressed Class Space",} 6845512.0
+jvm_memory_used_bytes{area="nonheap",id="CodeHeap 'non-profiled nmethods'",} 2266496.0
+
+This is the memory used output i am getting
+
+ran a query on the grafana dashboard -  avg(jvm_memory_used_bytes(area="heap")) by (pod)
+
+#do exec and  then run 
+
+apk update
+apk add stress-ng 
+stress-ng  --cpu 8 --io 4 --vm 2 --vm-bytes 128M --fork 4 --timeout 80s
+
+prometheus dashboard
+process_cpu_usage{instance="10.42.0.180:8080"}

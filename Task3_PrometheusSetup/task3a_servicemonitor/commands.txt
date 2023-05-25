@@ -11,3 +11,12 @@ For creating service monitor crds
 It needs to point to the service we have exposed 
 For the service monitor to actually -  give lables of the service used + port name
 
+
+ k port-forward svc/prometheus-operator-grafana 8082:80
+ k port-forward svc/prometheus-operator-kube-p-prometheus 9092:9090
+
+ 
+ Q task1  
+ Application running in different namespace - how service monitor can identify ?  - ans use namespace selector under spec: 
+ how the promql is working with grafana - data is retireved
+ 

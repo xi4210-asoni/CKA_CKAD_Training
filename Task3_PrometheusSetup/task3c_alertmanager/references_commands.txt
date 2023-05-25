@@ -1,0 +1,22 @@
+
+https://grafana.com/blog/2020/02/25/step-by-step-guide-to-setting-up-prometheus-alertmanager-with-slack-pagerduty-and-gmail/
+
+//Alert manager basic understanding
+https://medium.com/devops-dudes/prometheus-alerting-with-alertmanager-e1bbba8e6a8e
+
+https://prometheus-operator.dev/docs/operator/design/
+
+//Use of configmaps to add the configurations 
+https://devopscube.com/alert-manager-kubernetes-guide/
+
+//Complete reference from this blog
+https://www.squadcast.com/blog/infrastructure-monitoring-using-kube-prometheus-operator
+
+//slack setup
+https://www.svix.com/resources/guides/how-to-get-slack-webhook-url/
+
+
+k get secret alertmanager-prometheus-operator-kube-p-alertmanager  -o yaml
+
+different- example working
+https://blog.container-solutions.com/prometheus-operator-beginners-guide

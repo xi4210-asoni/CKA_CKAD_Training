@@ -1,0 +1,22 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: crd-rule
+spec:
+  groups:
+    - name: crd-prometheus-rate
+      rules:
+        - alert: PodCpuUsage
+          expr: avg (rate(process_cpu_usage{job="java-api"}[5m])) * 100 
+            
+          labels:
+            severity: crtical
+          annotations:
+            summary: HighCpu Usage in pod
+      #!if creating custom rules for the crd you can add them in the configmap for this rule
+      # interval: 1m  
+      # evaluation_interval: 1m
+      # alertmanagerConfigs:
+      #   - configMapKeyRef:
+      #       name: alermanager-config
+      #       key: alertmanager.yaml

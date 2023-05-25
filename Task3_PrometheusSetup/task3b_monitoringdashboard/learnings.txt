@@ -1,0 +1,6 @@
+#Grafana Dashboard - Monitoring Working
+
+https://www.youtube.com/watch?v=YUabB_7H710
+
+#Prometheus Ql
+https://github.com/DeekshithSN/Prometheus/wiki

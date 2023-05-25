@@ -1,0 +1,14 @@
+# demofile-prometheus.yaml:
+# add the below file as a .yaml file for groups
+
+groups:
+- name: kubernetes-slack-alertrule
+  rules:
+  - alert: AlertForRAMutilization
+    annotations:
+      description: Ram Utilization by pods are more than 20%
+    expr: |-
+       avg(rate(process_cpu_usage{job="java-api"}[5m]) * 100 ) >= 20
+    for: 5m
+    labels:
+      severity: warning
