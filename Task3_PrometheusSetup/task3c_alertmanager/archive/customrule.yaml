@@ -1,6 +1,5 @@
 # demofile-prometheus.yaml:
 # add the below file as a .yaml file for groups
-
 groups:
 - name: kubernetes-slack-alertrule
   rules:

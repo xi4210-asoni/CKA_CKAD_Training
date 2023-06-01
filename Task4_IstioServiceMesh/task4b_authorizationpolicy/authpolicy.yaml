@@ -1,0 +1,49 @@
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: ingress-gw-access
+spec:
+  selector:
+    matchLabels:
+      app: javawebapp
+  # action: ALLOW
+  # rules:
+  # - from:
+  #   - source:
+  #       notPrincipals: ['cluster.local/ns/istio-system/sa/istio-ingressgateway-service-account']
+        # namespaces: ["istio-system"]
+  action: ALLOW
+  rules:
+  - from:
+    - source:
+        principals: ['cluster.local/ns/istio-system/sa/istio-ingressgateway-service-account']
+    to:
+    - operation:
+        methods: ["GET"]
+        ports: ["8080"]
+  
+
+# apiVersion: security.istio.io/v1beta1
+# kind: AuthorizationPolicy
+# metadata: 
+#   name: ingress-gw-access
+# spec:
+#   selector:
+#     matchLabels:
+#       app: web-appsvc
+#   action: ALLOW
+#   rules:
+#   - from: 
+#     - source: 
+#       principals: ['cluster.local/ns/istio-system/sa/istio-ingressgateway-service-account']
+#     # to:
+#     # - operation:
+#         # hosts: ["*"]
+#   #   to:
+#   #   - operation: 
+#   #       ports: ["8080"]
+#   #     from:
+#   #       - source:
+#   #           selector:
+#   #             matchLabels:
+#   #               app: web-appsvc

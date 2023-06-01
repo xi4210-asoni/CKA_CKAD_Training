@@ -1,0 +1,12 @@
+global:
+  resolve_timeout: 5m
+  slack_api_url: 'https://hooks.slack.com/services/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'
+receivers:
+- name: "slack"
+  slack_configs:
+  - channel: '#general'
+    send_resolved: true
+route:
+  receiver: "slack"
+templates:
+- /etc/alertmanager/config/*.tmpl

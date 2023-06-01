@@ -1,0 +1,43 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: destrule-v1
+spec:
+  host: web-appsvc.default.svc.cluster.local
+  subsets:
+  - name: v1
+    labels: 
+      version: v1
+---
+
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: destrule-v2
+spec:
+  host: web-appsvc-updated.default.svc.cluster.local
+  subsets:
+  - name: v2
+    labels: 
+      version: v2
+# apiVersion: networking.istio.io/v1alpha3
+# kind: DestinationRule
+# metatadata:
+#   name: destrule-v1
+# spec:
+#   host: web-appsvc
+#   subsets:
+#   - name: v1
+#     labels:
+#       version: v1
+# ---
+# apiVersion: networking.istio.io/v1beta1
+# kind: DestinationRule
+# metatadata:
+#   name: destrule-v2
+# spec:
+#   host: web-appsvc-updated
+#   subsets:
+#   - name: v2
+#     labels:
+#       version: v2

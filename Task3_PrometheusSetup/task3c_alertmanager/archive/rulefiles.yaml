@@ -1,6 +1,6 @@
 apiVersion: v1
 data:
-  default-prometheus-operator-kube-p-alertmanager.rules-5d3897a5-9c5c-48b9-be70-6f7fdc7f975a.yaml: |
+  default-prometheus-kube-prometheus-alertmanager.rules-b3dc450b-2aff-4dbd-90ca-c344f0c47dc9.yaml: |
     groups:
     - name: alertmanager.rules
       rules:
@@ -13,7 +13,7 @@ data:
         expr: |-
           # Without max_over_time, failed scrapes could create false negatives, see
           # https://www.robustperception.io/alerting-on-gauges-in-prometheus-2-0 for details.
-          max_over_time(alertmanager_config_last_reload_successful{job="prometheus-operator-kube-p-alertmanager",namespace="default"}[5m]) == 0
+          max_over_time(alertmanager_config_last_reload_successful{job="prometheus-kube-prometheus-alertmanager",namespace="default"}[5m]) == 0
         for: 10m
         labels:
           severity: critical
@@ -27,9 +27,9 @@ data:
         expr: |-
           # Without max_over_time, failed scrapes could create false negatives, see
           # https://www.robustperception.io/alerting-on-gauges-in-prometheus-2-0 for details.
-            max_over_time(alertmanager_cluster_members{job="prometheus-operator-kube-p-alertmanager",namespace="default"}[5m])
+            max_over_time(alertmanager_cluster_members{job="prometheus-kube-prometheus-alertmanager",namespace="default"}[5m])
           < on (namespace,service) group_left
-            count by (namespace,service) (max_over_time(alertmanager_cluster_members{job="prometheus-operator-kube-p-alertmanager",namespace="default"}[5m]))
+            count by (namespace,service) (max_over_time(alertmanager_cluster_members{job="prometheus-kube-prometheus-alertmanager",namespace="default"}[5m]))
         for: 15m
         labels:
           severity: critical
@@ -42,9 +42,9 @@ data:
           summary: An Alertmanager instance failed to send notifications.
         expr: |-
           (
-            rate(alertmanager_notifications_failed_total{job="prometheus-operator-kube-p-alertmanager",namespace="default"}[5m])
+            rate(alertmanager_notifications_failed_total{job="prometheus-kube-prometheus-alertmanager",namespace="default"}[5m])
           /
-            rate(alertmanager_notifications_total{job="prometheus-operator-kube-p-alertmanager",namespace="default"}[5m])
+            rate(alertmanager_notifications_total{job="prometheus-kube-prometheus-alertmanager",namespace="default"}[5m])
           )
           > 0.01
         for: 5m
@@ -60,9 +60,9 @@ data:
             to a critical integration.
         expr: |-
           min by (namespace,service, integration) (
-            rate(alertmanager_notifications_failed_total{job="prometheus-operator-kube-p-alertmanager",namespace="default", integration=~`.*`}[5m])
+            rate(alertmanager_notifications_failed_total{job="prometheus-kube-prometheus-alertmanager",namespace="default", integration=~`.*`}[5m])
           /
-            rate(alertmanager_notifications_total{job="prometheus-operator-kube-p-alertmanager",namespace="default", integration=~`.*`}[5m])
+            rate(alertmanager_notifications_total{job="prometheus-kube-prometheus-alertmanager",namespace="default", integration=~`.*`}[5m])
           )
           > 0.01
         for: 5m
@@ -78,9 +78,9 @@ data:
             to a non-critical integration.
         expr: |-
           min by (namespace,service, integration) (
-            rate(alertmanager_notifications_failed_total{job="prometheus-operator-kube-p-alertmanager",namespace="default", integration!~`.*`}[5m])
+            rate(alertmanager_notifications_failed_total{job="prometheus-kube-prometheus-alertmanager",namespace="default", integration!~`.*`}[5m])
           /
-            rate(alertmanager_notifications_total{job="prometheus-operator-kube-p-alertmanager",namespace="default", integration!~`.*`}[5m])
+            rate(alertmanager_notifications_total{job="prometheus-kube-prometheus-alertmanager",namespace="default", integration!~`.*`}[5m])
           )
           > 0.01
         for: 5m
@@ -94,7 +94,7 @@ data:
           summary: Alertmanager instances within the same cluster have different configurations.
         expr: |-
           count by (namespace,service) (
-            count_values by (namespace,service) ("config_hash", alertmanager_config_hash{job="prometheus-operator-kube-p-alertmanager",namespace="default"})
+            count_values by (namespace,service) ("config_hash", alertmanager_config_hash{job="prometheus-kube-prometheus-alertmanager",namespace="default"})
           )
           != 1
         for: 20m
@@ -110,11 +110,11 @@ data:
         expr: |-
           (
             count by (namespace,service) (
-              avg_over_time(up{job="prometheus-operator-kube-p-alertmanager",namespace="default"}[5m]) < 0.5
+              avg_over_time(up{job="prometheus-kube-prometheus-alertmanager",namespace="default"}[5m]) < 0.5
             )
           /
             count by (namespace,service) (
-              up{job="prometheus-operator-kube-p-alertmanager",namespace="default"}
+              up{job="prometheus-kube-prometheus-alertmanager",namespace="default"}
             )
           )
           >= 0.5
@@ -131,18 +131,18 @@ data:
         expr: |-
           (
             count by (namespace,service) (
-              changes(process_start_time_seconds{job="prometheus-operator-kube-p-alertmanager",namespace="default"}[10m]) > 4
+              changes(process_start_time_seconds{job="prometheus-kube-prometheus-alertmanager",namespace="default"}[10m]) > 4
             )
           /
             count by (namespace,service) (
-              up{job="prometheus-operator-kube-p-alertmanager",namespace="default"}
+              up{job="prometheus-kube-prometheus-alertmanager",namespace="default"}
             )
           )
           >= 0.5
         for: 5m
         labels:
           severity: critical
-  default-prometheus-operator-kube-p-config-reloaders-ac2f7edc-07c2-430f-bb68-24a78f686f20.yaml: |
+  default-prometheus-kube-prometheus-config-reloaders-3f58bfbc-9073-4d80-bbdc-cc76b585eff7.yaml: |
     groups:
     - name: config-reloaders
       rules:
@@ -157,7 +157,7 @@ data:
         for: 10m
         labels:
           severity: warning
-  default-prometheus-operator-kube-p-etcd-9ed6f447-654a-4b2a-a1a7-701b3bac0fab.yaml: |
+  default-prometheus-kube-prometheus-etcd-51967464-3f7b-4a5b-9805-1ef5024b5a7b.yaml: |
     groups:
     - name: etcd
       rules:
@@ -338,7 +338,7 @@ data:
         for: 10m
         labels:
           severity: warning
-  default-prometheus-operator-kube-p-general.rules-f2b863ca-a09c-4553-8844-a033d9a967f9.yaml: |
+  default-prometheus-kube-prometheus-general.rules-54b7fc73-bad0-4cf3-8c30-6f104f8dad24.yaml: |
     groups:
     - name: general.rules
       rules:
@@ -366,7 +366,7 @@ data:
             is working properly.
         expr: vector(1)
         labels:
-          severity: none
+          severity: warning
       - alert: InfoInhibitor
         annotations:
           description: |
@@ -382,7 +382,7 @@ data:
           "InfoInhibitor", severity =~ "warning|critical", alertstate="firing"} == 1
         labels:
           severity: none
-  default-prometheus-operator-kube-p-k8s.rules-b41c75d0-3168-4391-a205-5b1620db4dda.yaml: |
+  default-prometheus-kube-prometheus-k8s.rules-02b208c1-87e8-4bf2-925c-ea949503c831.yaml: |
     groups:
     - name: k8s.rules
       rules:
@@ -532,7 +532,7 @@ data:
         labels:
           workload_type: job
         record: namespace_workload_pod:kube_pod_owner:relabel
-  default-prometheus-operator-kube-p-kube-apiserver-availability.rules-b575e2fe-5ec9-4abe-8dc7-8ea4659e6b78.yaml: |
+  default-prometheus-kube-prometheus-kube-apiserver-availability.rules-55b629ea-a725-4bc0-a796-e0b4d850b745.yaml: |
     groups:
     - interval: 3m
       name: kube-apiserver-availability.rules
@@ -648,7 +648,7 @@ data:
         record: code_verb:apiserver_request_total:increase1h
       - expr: sum by (cluster, code, verb) (increase(apiserver_request_total{job="apiserver",verb=~"LIST|GET|POST|PUT|PATCH|DELETE",code=~"5.."}[1h]))
         record: code_verb:apiserver_request_total:increase1h
-  default-prometheus-operator-kube-p-kube-apiserver-burnrate.rules-9751f47a-4649-4781-beb6-c1ac72b5c57c.yaml: |
+  default-prometheus-kube-prometheus-kube-apiserver-burnrate.rules-0760d6b9-0145-46d8-b2e8-6f91522ba138.yaml: |
     groups:
     - name: kube-apiserver-burnrate.rules
       rules:
@@ -953,7 +953,7 @@ data:
         labels:
           verb: write
         record: apiserver_request:burnrate6h
-  default-prometheus-operator-kube-p-kube-apiserver-histogram.rules-88dc5bb4-36e3-402d-b443-06e97b1ba284.yaml: |
+  default-prometheus-kube-prometheus-kube-apiserver-histogram.rules-92dc61c2-2c6a-4ec6-be12-414920aa374d.yaml: |
     groups:
     - name: kube-apiserver-histogram.rules
       rules:
@@ -969,7 +969,7 @@ data:
           quantile: "0.99"
           verb: write
         record: cluster_quantile:apiserver_request_slo_duration_seconds:histogram_quantile
-  default-prometheus-operator-kube-p-kube-apiserver-slos-52816fb8-dcda-4d7f-bf3b-511bddc910a0.yaml: |
+  default-prometheus-kube-prometheus-kube-apiserver-slos-6395ba9f-4432-4c86-8b0b-abeb18e90063.yaml: |
     groups:
     - name: kube-apiserver-slos
       rules:
@@ -1029,7 +1029,7 @@ data:
           long: 3d
           severity: warning
           short: 6h
-  default-prometheus-operator-kube-p-kube-prometheus-general.rules-39f9d4b9-afb3-4f31-a35f-3e1b5c71d3a1.yaml: |
+  default-prometheus-kube-prometheus-kube-prometheus-general.rules-41ba7439-0e85-423b-a775-a6c1b2238f8f.yaml: |
     groups:
     - name: kube-prometheus-general.rules
       rules:
@@ -1037,7 +1037,7 @@ data:
         record: count:up1
       - expr: count without(instance, pod, node) (up == 0)
         record: count:up0
-  default-prometheus-operator-kube-p-kube-prometheus-node-recording.rules-a144666b-a72e-4428-8ba0-5c54f7342f24.yaml: |
+  default-prometheus-kube-prometheus-kube-prometheus-node-recording.rules-1b60b695-09f5-42c0-b2d1-c75d1f4bffa1.yaml: |
     groups:
     - name: kube-prometheus-node-recording.rules
       rules:
@@ -1057,7 +1057,7 @@ data:
       - expr: cluster:node_cpu:sum_rate5m / count(sum(node_cpu_seconds_total) BY (instance,
           cpu))
         record: cluster:node_cpu:ratio
-  default-prometheus-operator-kube-p-kube-scheduler.rules-3c0dd422-5c2b-4880-9296-6ca334d2c14b.yaml: |
+  default-prometheus-kube-prometheus-kube-scheduler.rules-ba36096c-ed8b-4a30-a8eb-aa94aa8e780a.yaml: |
     groups:
     - name: kube-scheduler.rules
       rules:
@@ -1106,7 +1106,7 @@ data:
         labels:
           quantile: "0.5"
         record: cluster_quantile:scheduler_binding_duration_seconds:histogram_quantile
-  default-prometheus-operator-kube-p-kube-state-metrics-69fe1115-54ac-4afd-87ac-8bb057907580.yaml: |
+  default-prometheus-kube-prometheus-kube-state-metrics-e2ad0b3d-374a-4a23-b8e2-f93db8492896.yaml: |
     groups:
     - name: kube-state-metrics
       rules:
@@ -1165,7 +1165,7 @@ data:
         for: 15m
         labels:
           severity: critical
-  default-prometheus-operator-kube-p-kubelet.rules-011b69e8-d659-4724-a46e-425acbd79385.yaml: |
+  default-prometheus-kube-prometheus-kubelet.rules-154a0cc9-bb58-41f1-bd70-95351e156e16.yaml: |
     groups:
     - name: kubelet.rules
       rules:
@@ -1187,7 +1187,7 @@ data:
         labels:
           quantile: "0.5"
         record: node_quantile:kubelet_pleg_relist_duration_seconds:histogram_quantile
-  default-prometheus-operator-kube-p-kubernetes-apps-a3d14361-6ff1-4a76-90a2-c6af0b1e56db.yaml: |
+  default-prometheus-kube-prometheus-kubernetes-apps-44879068-e110-49f3-a824-161674a77267.yaml: |
     groups:
     - name: kubernetes-apps
       rules:
@@ -1438,7 +1438,7 @@ data:
         for: 15m
         labels:
           severity: warning
-  default-prometheus-operator-kube-p-kubernetes-resources-0961401d-3577-408b-a2a5-6665856c73a8.yaml: |
+  default-prometheus-kube-prometheus-kubernetes-resources-471f7eed-aa98-4e78-a987-774b92f08b6d.yaml: |
     groups:
     - name: kubernetes-resources
       rules:
@@ -1551,7 +1551,7 @@ data:
         for: 15m
         labels:
           severity: info
-  default-prometheus-operator-kube-p-kubernetes-storage-b34d3d88-b3be-4bae-ad7d-6af56f506b8a.yaml: |
+  default-prometheus-kube-prometheus-kubernetes-storage-471699a7-b7a7-4cd3-a136-e322366a0c72.yaml: |
     groups:
     - name: kubernetes-storage
       rules:
@@ -1658,7 +1658,36 @@ data:
         for: 5m
         labels:
           severity: critical
-  default-prometheus-operator-kube-p-kubernetes-system-apiserver-bab28a11-69e7-4a65-9b73-293e66a1ad91.yaml: |
+  default-prometheus-kube-prometheus-kubernetes-system-8614ccc5-93c6-4cd7-8198-6963039b611a.yaml: |
+    groups:
+    - name: kubernetes-system
+      rules:
+      - alert: KubeVersionMismatch
+        annotations:
+          description: There are {{ $value }} different semantic versions of Kubernetes
+            components running.
+          runbook_url: https://runbooks.prometheus-operator.dev/runbooks/kubernetes/kubeversionmismatch
+          summary: Different semantic versions of Kubernetes components running.
+        expr: count by (cluster) (count by (git_version, cluster) (label_replace(kubernetes_build_info{job!~"kube-dns|coredns"},"git_version","$1","git_version","(v[0-9]*.[0-9]*).*")))
+          > 1
+        for: 15m
+        labels:
+          severity: warning
+      - alert: KubeClientErrors
+        annotations:
+          description: Kubernetes API server client '{{ $labels.job }}/{{ $labels.instance
+            }}' is experiencing {{ $value | humanizePercentage }} errors.'
+          runbook_url: https://runbooks.prometheus-operator.dev/runbooks/kubernetes/kubeclienterrors
+          summary: Kubernetes API server client is experiencing errors.
+        expr: |-
+          (sum(rate(rest_client_requests_total{job="apiserver",code=~"5.."}[5m])) by (cluster, instance, job, namespace)
+            /
+          sum(rate(rest_client_requests_total{job="apiserver"}[5m])) by (cluster, instance, job, namespace))
+          > 0.01
+        for: 15m
+        labels:
+          severity: warning
+  default-prometheus-kube-prometheus-kubernetes-system-apiserver-6a586856-86dd-4b39-8ef4-3d03bb804d6b.yaml: |
     groups:
     - name: kubernetes-system-apiserver
       rules:
@@ -1730,7 +1759,7 @@ data:
         for: 5m
         labels:
           severity: warning
-  default-prometheus-operator-kube-p-kubernetes-system-controller-manager-6ddf2c0b-8dcd-4358-9b80-b01bb281c8c5.yaml: |
+  default-prometheus-kube-prometheus-kubernetes-system-controller-manager-146bd955-33fa-4548-bdf6-bdbddd7aa91a.yaml: |
     groups:
     - name: kubernetes-system-controller-manager
       rules:
@@ -1743,36 +1772,18 @@ data:
         for: 15m
         labels:
           severity: critical
-  default-prometheus-operator-kube-p-kubernetes-system-e8a08016-ff33-414d-a93c-c5bacbfdb6bd.yaml: |
-    groups:
-    - name: kubernetes-system
+    - name: kubernetes-system-controller-manager2
       rules:
-      - alert: KubeVersionMismatch
+      - alert: AkshatKubeControllerManagerDown
         annotations:
-          description: There are {{ $value }} different semantic versions of Kubernetes
-            components running.
-          runbook_url: https://runbooks.prometheus-operator.dev/runbooks/kubernetes/kubeversionmismatch
-          summary: Different semantic versions of Kubernetes components running.
-        expr: count by (cluster) (count by (git_version, cluster) (label_replace(kubernetes_build_info{job!~"kube-dns|coredns"},"git_version","$1","git_version","(v[0-9]*.[0-9]*).*")))
-          > 1
+          description: KubeControllerManager has disappeared from Prometheus target discovery.
+          runbook_url: https://runbooks.prometheus-operator.dev/runbooks/kubernetes/kubecontrollermanagerdown
+          summary: Target disappeared from Prometheus target discovery.
+        expr: absent(up{job="kube-controller-manager"} == 1)
         for: 15m
         labels:
-          severity: warning
-      - alert: KubeClientErrors
-        annotations:
-          description: Kubernetes API server client '{{ $labels.job }}/{{ $labels.instance
-            }}' is experiencing {{ $value | humanizePercentage }} errors.'
-          runbook_url: https://runbooks.prometheus-operator.dev/runbooks/kubernetes/kubeclienterrors
-          summary: Kubernetes API server client is experiencing errors.
-        expr: |-
-          (sum(rate(rest_client_requests_total{job="apiserver",code=~"5.."}[5m])) by (cluster, instance, job, namespace)
-            /
-          sum(rate(rest_client_requests_total{job="apiserver"}[5m])) by (cluster, instance, job, namespace))
-          > 0.01
-        for: 15m
-        labels:
-          severity: warning
-  default-prometheus-operator-kube-p-kubernetes-system-kube-proxy-f46c7465-977e-484d-a611-7a167719024a.yaml: |
+          severity: critical
+  default-prometheus-kube-prometheus-kubernetes-system-kube-proxy-fe1ccd1a-fda5-4eab-b5b4-067097432476.yaml: |
     groups:
     - name: kubernetes-system-kube-proxy
       rules:
@@ -1785,7 +1796,7 @@ data:
         for: 15m
         labels:
           severity: critical
-  default-prometheus-operator-kube-p-kubernetes-system-kubelet-7216b156-5eb6-4493-9081-beed0dc38f52.yaml: |
+  default-prometheus-kube-prometheus-kubernetes-system-kubelet-279a37f5-6a62-4c83-b5f0-da686dd7904a.yaml: |
     groups:
     - name: kubernetes-system-kubelet
       rules:
@@ -1928,7 +1939,7 @@ data:
         for: 15m
         labels:
           severity: critical
-  default-prometheus-operator-kube-p-kubernetes-system-scheduler-1b488d2c-88b5-43f4-8d6f-1994fc79781d.yaml: |
+  default-prometheus-kube-prometheus-kubernetes-system-scheduler-61a5e201-dc39-4af0-8d89-e8144fc139d1.yaml: |
     groups:
     - name: kubernetes-system-scheduler
       rules:
@@ -1941,7 +1952,7 @@ data:
         for: 15m
         labels:
           severity: critical
-  default-prometheus-operator-kube-p-node-exporter-6d68ac35-4374-4d5d-8a77-b785c6cc5991.yaml: |
+  default-prometheus-kube-prometheus-node-exporter-f3c9b9e3-a8bc-4076-be75-432cba2ebfd8.yaml: |
     groups:
     - name: node-exporter
       rules:
@@ -2194,7 +2205,7 @@ data:
         for: 15m
         labels:
           severity: critical
-  default-prometheus-operator-kube-p-node-exporter.rules-9150fbf3-1842-4d35-86cb-3818a39b8b70.yaml: |
+  default-prometheus-kube-prometheus-node-exporter.rules-58861e2b-e020-4f33-a14a-45d581fa1c19.yaml: |
     groups:
     - name: node-exporter.rules
       rules:
@@ -2260,7 +2271,7 @@ data:
             rate(node_network_transmit_drop_total{job="node-exporter", device!="lo"}[5m])
           )
         record: instance:node_network_transmit_drop_excluding_lo:rate5m
-  default-prometheus-operator-kube-p-node-network-9a6fe655-c419-4db6-bf59-59bbdf1104c0.yaml: |
+  default-prometheus-kube-prometheus-node-network-fe5ad1ba-28ac-4738-a561-54919d8edf75.yaml: |
     groups:
     - name: node-network
       rules:
@@ -2274,7 +2285,7 @@ data:
         for: 2m
         labels:
           severity: warning
-  default-prometheus-operator-kube-p-node.rules-c8aae5e8-698b-4790-85d1-964d97f4ba60.yaml: |
+  default-prometheus-kube-prometheus-node.rules-36b444bb-b39b-49d3-8e23-7055914c3e86.yaml: |
     groups:
     - name: node.rules
       rules:
@@ -2314,7 +2325,7 @@ data:
             node:node_cpu_utilization:ratio_rate5m
           )
         record: cluster:node_cpu:ratio_rate5m
-  default-prometheus-operator-kube-p-prometheus-f13e7335-b988-4e9f-be36-b3dc810d82a1.yaml: |
+  default-prometheus-kube-prometheus-prometheus-b954931c-a2f5-4b6f-906f-6990d9b78d3e.yaml: |
     groups:
     - name: prometheus
       rules:
@@ -2327,7 +2338,7 @@ data:
         expr: |-
           # Without max_over_time, failed scrapes could create false negatives, see
           # https://www.robustperception.io/alerting-on-gauges-in-prometheus-2-0 for details.
-          max_over_time(prometheus_config_last_reload_successful{job="prometheus-operator-kube-p-prometheus",namespace="default"}[5m]) == 0
+          max_over_time(prometheus_config_last_reload_successful{job="prometheus-kube-prometheus-prometheus",namespace="default"}[5m]) == 0
         for: 10m
         labels:
           severity: critical
@@ -2342,9 +2353,9 @@ data:
           # Without min_over_time, failed scrapes could create false negatives, see
           # https://www.robustperception.io/alerting-on-gauges-in-prometheus-2-0 for details.
           (
-            predict_linear(prometheus_notifications_queue_length{job="prometheus-operator-kube-p-prometheus",namespace="default"}[5m], 60 * 30)
+            predict_linear(prometheus_notifications_queue_length{job="prometheus-kube-prometheus-prometheus",namespace="default"}[5m], 60 * 30)
           >
-            min_over_time(prometheus_notifications_queue_capacity{job="prometheus-operator-kube-p-prometheus",namespace="default"}[5m])
+            min_over_time(prometheus_notifications_queue_capacity{job="prometheus-kube-prometheus-prometheus",namespace="default"}[5m])
           )
         for: 15m
         labels:
@@ -2358,9 +2369,9 @@ data:
             specific Alertmanager.
         expr: |-
           (
-            rate(prometheus_notifications_errors_total{job="prometheus-operator-kube-p-prometheus",namespace="default"}[5m])
+            rate(prometheus_notifications_errors_total{job="prometheus-kube-prometheus-prometheus",namespace="default"}[5m])
           /
-            rate(prometheus_notifications_sent_total{job="prometheus-operator-kube-p-prometheus",namespace="default"}[5m])
+            rate(prometheus_notifications_sent_total{job="prometheus-kube-prometheus-prometheus",namespace="default"}[5m])
           )
           * 100
           > 1
@@ -2376,7 +2387,7 @@ data:
         expr: |-
           # Without max_over_time, failed scrapes could create false negatives, see
           # https://www.robustperception.io/alerting-on-gauges-in-prometheus-2-0 for details.
-          max_over_time(prometheus_notifications_alertmanagers_discovered{job="prometheus-operator-kube-p-prometheus",namespace="default"}[5m]) < 1
+          max_over_time(prometheus_notifications_alertmanagers_discovered{job="prometheus-kube-prometheus-prometheus",namespace="default"}[5m]) < 1
         for: 10m
         labels:
           severity: warning
@@ -2386,7 +2397,7 @@ data:
             | humanize}} reload failures over the last 3h.
           runbook_url: https://runbooks.prometheus-operator.dev/runbooks/prometheus/prometheustsdbreloadsfailing
           summary: Prometheus has issues reloading blocks from disk.
-        expr: increase(prometheus_tsdb_reloads_failures_total{job="prometheus-operator-kube-p-prometheus",namespace="default"}[3h])
+        expr: increase(prometheus_tsdb_reloads_failures_total{job="prometheus-kube-prometheus-prometheus",namespace="default"}[3h])
           > 0
         for: 4h
         labels:
@@ -2397,7 +2408,7 @@ data:
             | humanize}} compaction failures over the last 3h.
           runbook_url: https://runbooks.prometheus-operator.dev/runbooks/prometheus/prometheustsdbcompactionsfailing
           summary: Prometheus has issues compacting blocks.
-        expr: increase(prometheus_tsdb_compactions_failed_total{job="prometheus-operator-kube-p-prometheus",namespace="default"}[3h])
+        expr: increase(prometheus_tsdb_compactions_failed_total{job="prometheus-kube-prometheus-prometheus",namespace="default"}[3h])
           > 0
         for: 4h
         labels:
@@ -2410,12 +2421,12 @@ data:
           summary: Prometheus is not ingesting samples.
         expr: |-
           (
-            rate(prometheus_tsdb_head_samples_appended_total{job="prometheus-operator-kube-p-prometheus",namespace="default"}[5m]) <= 0
+            rate(prometheus_tsdb_head_samples_appended_total{job="prometheus-kube-prometheus-prometheus",namespace="default"}[5m]) <= 0
           and
             (
-              sum without(scrape_job) (prometheus_target_metadata_cache_entries{job="prometheus-operator-kube-p-prometheus",namespace="default"}) > 0
+              sum without(scrape_job) (prometheus_target_metadata_cache_entries{job="prometheus-kube-prometheus-prometheus",namespace="default"}) > 0
             or
-              sum without(rule_group) (prometheus_rule_group_rules{job="prometheus-operator-kube-p-prometheus",namespace="default"}) > 0
+              sum without(rule_group) (prometheus_rule_group_rules{job="prometheus-kube-prometheus-prometheus",namespace="default"}) > 0
             )
           )
         for: 10m
@@ -2427,7 +2438,7 @@ data:
             printf "%.4g" $value  }} samples/s with different values but duplicated timestamp.
           runbook_url: https://runbooks.prometheus-operator.dev/runbooks/prometheus/prometheusduplicatetimestamps
           summary: Prometheus is dropping samples with duplicate timestamps.
-        expr: rate(prometheus_target_scrapes_sample_duplicate_timestamp_total{job="prometheus-operator-kube-p-prometheus",namespace="default"}[5m])
+        expr: rate(prometheus_target_scrapes_sample_duplicate_timestamp_total{job="prometheus-kube-prometheus-prometheus",namespace="default"}[5m])
           > 0
         for: 10m
         labels:
@@ -2438,7 +2449,7 @@ data:
             printf "%.4g" $value  }} samples/s with timestamps arriving out of order.
           runbook_url: https://runbooks.prometheus-operator.dev/runbooks/prometheus/prometheusoutofordertimestamps
           summary: Prometheus drops samples with out-of-order timestamps.
-        expr: rate(prometheus_target_scrapes_sample_out_of_order_total{job="prometheus-operator-kube-p-prometheus",namespace="default"}[5m])
+        expr: rate(prometheus_target_scrapes_sample_out_of_order_total{job="prometheus-kube-prometheus-prometheus",namespace="default"}[5m])
           > 0
         for: 10m
         labels:
@@ -2452,12 +2463,12 @@ data:
           summary: Prometheus fails to send samples to remote storage.
         expr: |-
           (
-            (rate(prometheus_remote_storage_failed_samples_total{job="prometheus-operator-kube-p-prometheus",namespace="default"}[5m]) or rate(prometheus_remote_storage_samples_failed_total{job="prometheus-operator-kube-p-prometheus",namespace="default"}[5m]))
+            (rate(prometheus_remote_storage_failed_samples_total{job="prometheus-kube-prometheus-prometheus",namespace="default"}[5m]) or rate(prometheus_remote_storage_samples_failed_total{job="prometheus-kube-prometheus-prometheus",namespace="default"}[5m]))
           /
             (
-              (rate(prometheus_remote_storage_failed_samples_total{job="prometheus-operator-kube-p-prometheus",namespace="default"}[5m]) or rate(prometheus_remote_storage_samples_failed_total{job="prometheus-operator-kube-p-prometheus",namespace="default"}[5m]))
+              (rate(prometheus_remote_storage_failed_samples_total{job="prometheus-kube-prometheus-prometheus",namespace="default"}[5m]) or rate(prometheus_remote_storage_samples_failed_total{job="prometheus-kube-prometheus-prometheus",namespace="default"}[5m]))
             +
-              (rate(prometheus_remote_storage_succeeded_samples_total{job="prometheus-operator-kube-p-prometheus",namespace="default"}[5m]) or rate(prometheus_remote_storage_samples_total{job="prometheus-operator-kube-p-prometheus",namespace="default"}[5m]))
+              (rate(prometheus_remote_storage_succeeded_samples_total{job="prometheus-kube-prometheus-prometheus",namespace="default"}[5m]) or rate(prometheus_remote_storage_samples_total{job="prometheus-kube-prometheus-prometheus",namespace="default"}[5m]))
             )
           )
           * 100
@@ -2476,9 +2487,9 @@ data:
           # Without max_over_time, failed scrapes could create false negatives, see
           # https://www.robustperception.io/alerting-on-gauges-in-prometheus-2-0 for details.
           (
-            max_over_time(prometheus_remote_storage_highest_timestamp_in_seconds{job="prometheus-operator-kube-p-prometheus",namespace="default"}[5m])
+            max_over_time(prometheus_remote_storage_highest_timestamp_in_seconds{job="prometheus-kube-prometheus-prometheus",namespace="default"}[5m])
           - ignoring(remote_name, url) group_right
-            max_over_time(prometheus_remote_storage_queue_highest_sent_timestamp_seconds{job="prometheus-operator-kube-p-prometheus",namespace="default"}[5m])
+            max_over_time(prometheus_remote_storage_queue_highest_sent_timestamp_seconds{job="prometheus-kube-prometheus-prometheus",namespace="default"}[5m])
           )
           > 120
         for: 15m
@@ -2488,7 +2499,7 @@ data:
         annotations:
           description: Prometheus {{$labels.namespace}}/{{$labels.pod}} remote write desired
             shards calculation wants to run {{ $value }} shards for queue {{ $labels.remote_name}}:{{
-            $labels.url }}, which is more than the max of {{ printf `prometheus_remote_storage_shards_max{instance="%s",job="prometheus-operator-kube-p-prometheus",namespace="default"}`
+            $labels.url }}, which is more than the max of {{ printf `prometheus_remote_storage_shards_max{instance="%s",job="prometheus-kube-prometheus-prometheus",namespace="default"}`
             $labels.instance | query | first | value }}.
           runbook_url: https://runbooks.prometheus-operator.dev/runbooks/prometheus/prometheusremotewritedesiredshards
           summary: Prometheus remote write desired shards calculation wants to run more
@@ -2497,9 +2508,9 @@ data:
           # Without max_over_time, failed scrapes could create false negatives, see
           # https://www.robustperception.io/alerting-on-gauges-in-prometheus-2-0 for details.
           (
-            max_over_time(prometheus_remote_storage_shards_desired{job="prometheus-operator-kube-p-prometheus",namespace="default"}[5m])
+            max_over_time(prometheus_remote_storage_shards_desired{job="prometheus-kube-prometheus-prometheus",namespace="default"}[5m])
           >
-            max_over_time(prometheus_remote_storage_shards_max{job="prometheus-operator-kube-p-prometheus",namespace="default"}[5m])
+            max_over_time(prometheus_remote_storage_shards_max{job="prometheus-kube-prometheus-prometheus",namespace="default"}[5m])
           )
         for: 15m
         labels:
@@ -2510,7 +2521,7 @@ data:
             evaluate {{ printf "%.0f" $value }} rules in the last 5m.
           runbook_url: https://runbooks.prometheus-operator.dev/runbooks/prometheus/prometheusrulefailures
           summary: Prometheus is failing rule evaluations.
-        expr: increase(prometheus_rule_evaluation_failures_total{job="prometheus-operator-kube-p-prometheus",namespace="default"}[5m])
+        expr: increase(prometheus_rule_evaluation_failures_total{job="prometheus-kube-prometheus-prometheus",namespace="default"}[5m])
           > 0
         for: 15m
         labels:
@@ -2521,7 +2532,7 @@ data:
             printf "%.0f" $value }} rule group evaluations in the last 5m.
           runbook_url: https://runbooks.prometheus-operator.dev/runbooks/prometheus/prometheusmissingruleevaluations
           summary: Prometheus is missing rule evaluations due to slow rule group evaluation.
-        expr: increase(prometheus_rule_group_iterations_missed_total{job="prometheus-operator-kube-p-prometheus",namespace="default"}[5m])
+        expr: increase(prometheus_rule_group_iterations_missed_total{job="prometheus-kube-prometheus-prometheus",namespace="default"}[5m])
           > 0
         for: 15m
         labels:
@@ -2534,7 +2545,7 @@ data:
           runbook_url: https://runbooks.prometheus-operator.dev/runbooks/prometheus/prometheustargetlimithit
           summary: Prometheus has dropped targets because some scrape configs have exceeded
             the targets limit.
-        expr: increase(prometheus_target_scrape_pool_exceeded_target_limit_total{job="prometheus-operator-kube-p-prometheus",namespace="default"}[5m])
+        expr: increase(prometheus_target_scrape_pool_exceeded_target_limit_total{job="prometheus-kube-prometheus-prometheus",namespace="default"}[5m])
           > 0
         for: 15m
         labels:
@@ -2547,7 +2558,7 @@ data:
           runbook_url: https://runbooks.prometheus-operator.dev/runbooks/prometheus/prometheuslabellimithit
           summary: Prometheus has dropped targets because some scrape configs have exceeded
             the labels limit.
-        expr: increase(prometheus_target_scrape_pool_exceeded_label_limits_total{job="prometheus-operator-kube-p-prometheus",namespace="default"}[5m])
+        expr: increase(prometheus_target_scrape_pool_exceeded_label_limits_total{job="prometheus-kube-prometheus-prometheus",namespace="default"}[5m])
           > 0
         for: 15m
         labels:
@@ -2559,7 +2570,7 @@ data:
             the configured body_size_limit.
           runbook_url: https://runbooks.prometheus-operator.dev/runbooks/prometheus/prometheusscrapebodysizelimithit
           summary: Prometheus has dropped some targets that exceeded body size limit.
-        expr: increase(prometheus_target_scrapes_exceeded_body_size_limit_total{job="prometheus-operator-kube-p-prometheus",namespace="default"}[5m])
+        expr: increase(prometheus_target_scrapes_exceeded_body_size_limit_total{job="prometheus-kube-prometheus-prometheus",namespace="default"}[5m])
           > 0
         for: 15m
         labels:
@@ -2572,7 +2583,7 @@ data:
           runbook_url: https://runbooks.prometheus-operator.dev/runbooks/prometheus/prometheusscrapesamplelimithit
           summary: Prometheus has failed scrapes that have exceeded the configured sample
             limit.
-        expr: increase(prometheus_target_scrapes_exceeded_sample_limit_total{job="prometheus-operator-kube-p-prometheus",namespace="default"}[5m])
+        expr: increase(prometheus_target_scrapes_exceeded_sample_limit_total{job="prometheus-kube-prometheus-prometheus",namespace="default"}[5m])
           > 0
         for: 15m
         labels:
@@ -2583,7 +2594,7 @@ data:
             have failed to sync because invalid configuration was supplied.'
           runbook_url: https://runbooks.prometheus-operator.dev/runbooks/prometheus/prometheustargetsyncfailure
           summary: Prometheus has failed to sync targets.
-        expr: increase(prometheus_target_sync_failed_total{job="prometheus-operator-kube-p-prometheus",namespace="default"}[30m])
+        expr: increase(prometheus_target_sync_failed_total{job="prometheus-kube-prometheus-prometheus",namespace="default"}[30m])
           > 0
         for: 5m
         labels:
@@ -2594,8 +2605,8 @@ data:
             less than 20% available capacity in its query engine for the last 15 minutes.
           runbook_url: https://runbooks.prometheus-operator.dev/runbooks/prometheus/prometheushighqueryload
           summary: Prometheus is reaching its maximum capacity serving concurrent requests.
-        expr: avg_over_time(prometheus_engine_queries{job="prometheus-operator-kube-p-prometheus",namespace="default"}[5m])
-          / max_over_time(prometheus_engine_queries_concurrent_max{job="prometheus-operator-kube-p-prometheus",namespace="default"}[5m])
+        expr: avg_over_time(prometheus_engine_queries{job="prometheus-kube-prometheus-prometheus",namespace="default"}[5m])
+          / max_over_time(prometheus_engine_queries_concurrent_max{job="prometheus-kube-prometheus-prometheus",namespace="default"}[5m])
           > 0.8
         for: 15m
         labels:
@@ -2608,16 +2619,16 @@ data:
           summary: Prometheus encounters more than 3% errors sending alerts to any Alertmanager.
         expr: |-
           min without (alertmanager) (
-            rate(prometheus_notifications_errors_total{job="prometheus-operator-kube-p-prometheus",namespace="default",alertmanager!~``}[5m])
+            rate(prometheus_notifications_errors_total{job="prometheus-kube-prometheus-prometheus",namespace="default",alertmanager!~``}[5m])
           /
-            rate(prometheus_notifications_sent_total{job="prometheus-operator-kube-p-prometheus",namespace="default",alertmanager!~``}[5m])
+            rate(prometheus_notifications_sent_total{job="prometheus-kube-prometheus-prometheus",namespace="default",alertmanager!~``}[5m])
           )
           * 100
           > 3
         for: 15m
         labels:
           severity: critical
-  default-prometheus-operator-kube-p-prometheus-operator-18e3169f-c1f2-4b41-930e-d5cd21dee932.yaml: |
+  default-prometheus-kube-prometheus-prometheus-operator-9ad91d01-bf67-4ed0-8595-833e1c25cefa.yaml: |
     groups:
     - name: prometheus-operator
       rules:
@@ -2627,8 +2638,8 @@ data:
             in {{$labels.namespace}} namespace.
           runbook_url: https://runbooks.prometheus-operator.dev/runbooks/prometheus-operator/prometheusoperatorlisterrors
           summary: Errors while performing list operations in controller.
-        expr: (sum by (controller,namespace,cluster) (rate(prometheus_operator_list_operations_failed_total{job="prometheus-operator-kube-p-operator",namespace="default"}[10m]))
-          / sum by (controller,namespace,cluster) (rate(prometheus_operator_list_operations_total{job="prometheus-operator-kube-p-operator",namespace="default"}[10m])))
+        expr: (sum by (controller,namespace,cluster) (rate(prometheus_operator_list_operations_failed_total{job="prometheus-kube-prometheus-operator",namespace="default"}[10m]))
+          / sum by (controller,namespace,cluster) (rate(prometheus_operator_list_operations_total{job="prometheus-kube-prometheus-operator",namespace="default"}[10m])))
           > 0.4
         for: 15m
         labels:
@@ -2639,8 +2650,8 @@ data:
             in {{$labels.namespace}} namespace.
           runbook_url: https://runbooks.prometheus-operator.dev/runbooks/prometheus-operator/prometheusoperatorwatcherrors
           summary: Errors while performing watch operations in controller.
-        expr: (sum by (controller,namespace,cluster) (rate(prometheus_operator_watch_operations_failed_total{job="prometheus-operator-kube-p-operator",namespace="default"}[5m]))
-          / sum by (controller,namespace,cluster) (rate(prometheus_operator_watch_operations_total{job="prometheus-operator-kube-p-operator",namespace="default"}[5m])))
+        expr: (sum by (controller,namespace,cluster) (rate(prometheus_operator_watch_operations_failed_total{job="prometheus-kube-prometheus-operator",namespace="default"}[5m]))
+          / sum by (controller,namespace,cluster) (rate(prometheus_operator_watch_operations_total{job="prometheus-kube-prometheus-operator",namespace="default"}[5m])))
           > 0.4
         for: 15m
         labels:
@@ -2651,7 +2662,7 @@ data:
             namespace fails to reconcile {{ $value }} objects.
           runbook_url: https://runbooks.prometheus-operator.dev/runbooks/prometheus-operator/prometheusoperatorsyncfailed
           summary: Last controller reconciliation failed
-        expr: min_over_time(prometheus_operator_syncs{status="failed",job="prometheus-operator-kube-p-operator",namespace="default"}[5m])
+        expr: min_over_time(prometheus_operator_syncs{status="failed",job="prometheus-kube-prometheus-operator",namespace="default"}[5m])
           > 0
         for: 10m
         labels:
@@ -2662,8 +2673,8 @@ data:
             for {{ $labels.controller }} controller in {{ $labels.namespace }} namespace.'
           runbook_url: https://runbooks.prometheus-operator.dev/runbooks/prometheus-operator/prometheusoperatorreconcileerrors
           summary: Errors while reconciling controller.
-        expr: (sum by (controller,namespace,cluster) (rate(prometheus_operator_reconcile_errors_total{job="prometheus-operator-kube-p-operator",namespace="default"}[5m])))
-          / (sum by (controller,namespace,cluster) (rate(prometheus_operator_reconcile_operations_total{job="prometheus-operator-kube-p-operator",namespace="default"}[5m])))
+        expr: (sum by (controller,namespace,cluster) (rate(prometheus_operator_reconcile_errors_total{job="prometheus-kube-prometheus-operator",namespace="default"}[5m])))
+          / (sum by (controller,namespace,cluster) (rate(prometheus_operator_reconcile_operations_total{job="prometheus-kube-prometheus-operator",namespace="default"}[5m])))
           > 0.1
         for: 10m
         labels:
@@ -2674,7 +2685,7 @@ data:
             Namespace.
           runbook_url: https://runbooks.prometheus-operator.dev/runbooks/prometheus-operator/prometheusoperatornodelookuperrors
           summary: Errors while reconciling Prometheus.
-        expr: rate(prometheus_operator_node_address_lookup_errors_total{job="prometheus-operator-kube-p-operator",namespace="default"}[5m])
+        expr: rate(prometheus_operator_node_address_lookup_errors_total{job="prometheus-kube-prometheus-operator",namespace="default"}[5m])
           > 0.1
         for: 10m
         labels:
@@ -2685,7 +2696,7 @@ data:
             ready to reconcile {{ $labels.controller }} resources.
           runbook_url: https://runbooks.prometheus-operator.dev/runbooks/prometheus-operator/prometheusoperatornotready
           summary: Prometheus operator not ready
-        expr: min by (controller,namespace,cluster) (max_over_time(prometheus_operator_ready{job="prometheus-operator-kube-p-operator",namespace="default"}[5m])
+        expr: min by (controller,namespace,cluster) (max_over_time(prometheus_operator_ready{job="prometheus-kube-prometheus-operator",namespace="default"}[5m])
           == 0)
         for: 5m
         labels:
@@ -2697,37 +2708,25 @@ data:
             resources.
           runbook_url: https://runbooks.prometheus-operator.dev/runbooks/prometheus-operator/prometheusoperatorrejectedresources
           summary: Resources rejected by Prometheus operator
-        expr: min_over_time(prometheus_operator_managed_resources{state="rejected",job="prometheus-operator-kube-p-operator",namespace="default"}[5m])
+        expr: min_over_time(prometheus_operator_managed_resources{state="rejected",job="prometheus-kube-prometheus-operator",namespace="default"}[5m])
           > 0
-        for: 5m
-        labels:
-          severity: warning
-  custom-prometheus-rule: |
-    groups:
-    - name: custom-alert-rule
-      rules:
-      - alert: AlertForRAMutilization
-        annotations:
-          description: RAM utilization by pods
-        expr: |- 
-            avg(rate(process_cpu_usage{job="java-api"}[5m]) * 100 ) >= 20
         for: 5m
         labels:
           severity: warning
 kind: ConfigMap
 metadata:
-  creationTimestamp: "2023-05-25T06:40:15Z"
+  creationTimestamp: "2023-05-26T11:10:12Z"
   labels:
     managed-by: prometheus-operator
-    prometheus-name: prometheus-operator-kube-p-prometheus
-  name: prometheus-prometheus-operator-kube-p-prometheus-rulefiles-0
+    prometheus-name: prometheus-kube-prometheus-prometheus
+  name: prometheus-prometheus-kube-prometheus-prometheus-rulefiles-0
   namespace: default
   ownerReferences:
   - apiVersion: monitoring.coreos.com/v1
     blockOwnerDeletion: true
     controller: true
     kind: Prometheus
-    name: prometheus-operator-kube-p-prometheus
-    uid: 46180afb-df44-456d-b778-0c6972604db0
-  resourceVersion: "54725"
-  uid: 30a33b06-dbe6-4459-87bc-9cdc67426ae9
+    name: prometheus-kube-prometheus-prometheus
+    uid: fa40f63a-70fd-4c6b-85d5-404344a63aa2
+  resourceVersion: "67753"
+  uid: a24ef7c3-8cd0-4f0b-9b49-d692c5c22bf6

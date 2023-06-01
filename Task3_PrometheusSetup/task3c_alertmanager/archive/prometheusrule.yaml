@@ -8,7 +8,6 @@ spec:
       rules:
         - alert: PodCpuUsage
           expr: avg (rate(process_cpu_usage{job="java-api"}[5m])) * 100 
-            
           labels:
             severity: crtical
           annotations:
