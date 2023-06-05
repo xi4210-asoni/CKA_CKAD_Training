@@ -1,26 +1,38 @@
+#! Deny All
+# apiVersion: security.istio.io/v1beta1
+# kind: AuthorizationPolicy
+# metadata:
+#   name: deny-all
+#   namespace: default
+# spec: {}
+
+#! Authorization Ingress
 apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
 metadata:
   name: ingress-gw-access
 spec:
+  action: DENY
   selector:
-    matchLabels:
-      app: javawebapp
+    matchLabels:  
+      app: javawebappv1 #deploylabels
+      # app: jwappsvc #servicelabels
+      # job: java-api
+  rules:
+  - from:
+    - source:
+        principals: ['malicious']
+    to:
+    - operation:
+        methods: ["GET","POST"]
+        ports: ["8080"]
   # action: ALLOW
   # rules:
   # - from:
   #   - source:
   #       notPrincipals: ['cluster.local/ns/istio-system/sa/istio-ingressgateway-service-account']
         # namespaces: ["istio-system"]
-  action: ALLOW
-  rules:
-  - from:
-    - source:
-        principals: ['cluster.local/ns/istio-system/sa/istio-ingressgateway-service-account']
-    to:
-    - operation:
-        methods: ["GET"]
-        ports: ["8080"]
+  
   
 
 # apiVersion: security.istio.io/v1beta1

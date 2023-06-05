@@ -1,0 +1,22 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: demovs
+spec:
+  hosts:
+  - "istiogateway.127.0.0.1.sslip.io"
+  # - "*"
+  gateways:
+  - istiogateway
+  http:
+  - match: 
+    - uri:
+        prefix: /javaservice
+    redirect:
+      uri: /
+      redirectCode: 302
+  - route:
+    - destination:
+        host: jwappsvcv1
+        port:
+          number: 8080
