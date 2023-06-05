@@ -1,0 +1,26 @@
+kubectl create ns argocd
+
+Core install
+kubectl apply -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/core-install.yaml -n argocd
+
+Service updated
+k port-forward svc/argocd-server 80:443 -n argocd
+
+username: admin
+password: k get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" -n argocd  | base64 -d  
+
+https://github.com/xi4210-asoni/CKA_CKAD_Training
+Task4_IstioServiceMesh/task4c_canary_deployments
+
+
+Manifests for deployment
+project: default
+source:
+  repoURL: 'https://github.com/xi4210-asoni/CKA_CKAD_Training.git'
+  path: Task4_IstioServiceMesh/task4c_canary_deployments
+  targetRevision: HEAD
+destination:
+  server: 'https://kubernetes.default.svc'
+  namespace: default
+syncPolicy: {}
+

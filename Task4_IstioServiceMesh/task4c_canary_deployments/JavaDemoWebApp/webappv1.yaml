@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jwappv1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: javawebappv1
+  template:
+    metadata:
+      labels:
+        app: javawebappv1
+        version: v1
+    spec:
+      containers:
+        - name: javawebappcontainer
+          image: xi4210asoni/java-web-server:0.1.2
+          env:
+            - name: POSTGRES_HOST
+              value: postgresqlsvc
+            - name: POSTGRES_USER
+              value: "postgres"
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: conn-secret
+                  key: POSTGRES_PASSWORD
+            - name: CONN
+              valueFrom:
+                secretKeyRef:
+                  name: conn-secret
+                  key: POSTGRES_CONN
+          ports:
+            - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: jwappsvcv1
+  labels:
+    job: java-api
+    app: jwappsvc
+spec:
+  selector:
+    app: javawebappv1
+  ports:
+    - name: http
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
