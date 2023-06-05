@@ -3,7 +3,6 @@ kind: DestinationRule
 metadata:
   name: jwappsvcv1
 spec:
-  # host: jwappsvcv1.default.svc.cluster.local
   host: jwappsvcv1
   subsets:
   - name: v1
@@ -20,6 +19,9 @@ spec:
   - name: v2
     labels: 
       version: v2
+
+---
+
 # apiVersion: networking.istio.io/v1alpha3
 # kind: DestinationRule
 # metatadata:

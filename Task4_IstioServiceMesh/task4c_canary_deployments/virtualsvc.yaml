@@ -6,7 +6,7 @@ spec:
   hosts:
     # - javaservicemeshgateway.default.svc.cluster.local
     # - "*"
-    - "myapp.127.0.0.1.sslip.io"      #!domain name for localhost directly
+    - "localhost.127.0.0.1.sslip.io"      #!domain name for localhost directly
   gateways:
     - javaservicemeshgateway
   http:
@@ -14,10 +14,10 @@ spec:
     - destination:
         # host: jwappsvcv1.default.svc.cluster.local
         host: jwappsvcv1
-        subset: v1
+        # subset: v1
       weight: 80
     - destination:
         # host: jwappsvcv2.default.svc.cluster.local
         host: jwappsvcv2
-        subset: v2
+        # subset: v2
       weight: 20
