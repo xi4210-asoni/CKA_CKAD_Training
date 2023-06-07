@@ -1,0 +1,17 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argoclicanarydep
+spec:
+  project: default
+  source: 
+    repoURL: https://github.com/xi4210-asoni/CKA_CKAD_Training.git
+    targetRevision: HEAD
+    path: Task4_IstioServiceMesh/task4c_canary_deployments
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    automated: {}
+  
+

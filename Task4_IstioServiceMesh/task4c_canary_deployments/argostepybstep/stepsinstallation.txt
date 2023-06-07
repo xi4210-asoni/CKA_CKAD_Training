@@ -4,15 +4,17 @@ Core install
 kubectl apply -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/core-install.yaml -n argocd
 
 Service updated
-k port-forward svc/argocd-server 80:443 -n argocd
+k port-forward svc/argocd-server 8080 -n argocd
 
 username: admin
-password: k get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" -n argocd  | base64 -d  
+password: (qf4iCNL-Uu9jhyg6)k get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" -n argocd  | base64 -d  
 
 https://github.com/xi4210-asoni/CKA_CKAD_Training
 Task4_IstioServiceMesh/task4c_canary_deployments
 
+https://stackoverflow.com/questions/71030111/how-to-login-to-argocd-cli-non-interactive-in-ci-like-github-actions
 
+Update the manifests files from the dashboard 
 Manifests for deployment
 project: default
 source:
@@ -22,5 +24,11 @@ source:
 destination:
   server: 'https://kubernetes.default.svc'
   namespace: default
-syncPolicy: {}
+syncPolicy: 
+    automated: {}
 
+#Run the application
+argocd login
+argocd login cd.argoproj.io
+argocd login localhost:8080
+argocd app create --file /root/work/CKACKADTraining/Task4_IstioServiceMesh/task4c_canary_deployments/ArgoRollouts/argoapp.yaml

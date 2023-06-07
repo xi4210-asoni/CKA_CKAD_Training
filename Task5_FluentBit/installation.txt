@@ -1,0 +1,37 @@
+
+Installation setup
+https://docs.fluentbit.io/manual/installation/kubernetes
+
+#Commands to set the port forwarding
+
+helm repo add fluent https://fluent.github.io/helm-charts
+
+helm upgrade --install fluent-bit fluent/fluent-bit
+
+export POD_NAME=$(kubectl get pods --namespace default -l "app.kubernetes.io/name=fluent-bit,app.kubernetes.io/instance=fluent-bit" -o jsonpath="{.items[0].metadata.name}")
+
+kubectl --namespace default port-forward $POD_NAME 2020:2020
+
+curl http://127.0.0.1:2020
+
+##
+ElasticSearch Details on 
+##
+
+helm repo add elastic https://helm.elastic.co
+helm install elasticsearch elastic/elasticsearch
+
+NOTES:
+1. Watch all cluster members come up.
+  $ kubectl get pods --namespace=default -l app=elasticsearch-master -w
+2. Retrieve elastic user's password.
+  $ kubectl get secrets --namespace=default elasticsearch-master-credentials -ojsonpath='{.data.password}' | base64 -d
+3. Test cluster health using Helm test.
+  $ helm --namespace=default test elasticsearch
+
+
+## Take References
+
+https://github.com/isItObservable/Episode3--Kubernetes-Fluentbit
+https://medium.com/kubernetes-tutorials/exporting-kubernetes-logs-to-elasticsearch-using-fluent-bit-758e8de606af
+

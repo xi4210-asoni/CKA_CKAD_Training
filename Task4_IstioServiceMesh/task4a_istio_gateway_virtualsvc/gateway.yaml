@@ -11,7 +11,7 @@ spec:
       name: http
       protocol: HTTP
     hosts:
-      - "*"
+      - "*"   #domain name
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
@@ -19,7 +19,7 @@ metadata:
   name: javademovs
 spec:
   hosts:
-  - "*"
+  - "*"   #multiple domain names with multiple services
   gateways:
   - javaservicemeshgateway
   http:
