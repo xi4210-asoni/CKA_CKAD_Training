@@ -1,0 +1,20 @@
+{
+    "spec": {
+        "containers": [
+            {
+                "name": "democon",
+                "image": "nginx",
+                "securityContext": {
+                    "privileged": false
+                }
+            },
+            {
+                "name": "testvalue",
+                "image": "apache",
+                "securityContext": {
+                    "privileged": true
+                }
+            }
+        ]
+    }
+}

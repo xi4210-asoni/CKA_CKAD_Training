@@ -1,0 +1,6 @@
+Official References
+
+https://open-policy-agent.github.io/gatekeeper-library/website/validation/containerlimits
+
+https://open-policy-agent.github.io/gatekeeper-library/website/validation/containerrequests
+

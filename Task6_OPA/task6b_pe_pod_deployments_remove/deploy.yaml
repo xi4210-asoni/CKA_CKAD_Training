@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: privileged-deploy
+  labels:
+    app: privileged-test-deploy
+spec:
+  replicas: 2
+  selector:
+    matchLabels: 
+      app: privileged-test
+  template:
+    metadata: 
+      labels:
+        app: privileged-test
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:latest
+          securityContext: 
+            allowPrivilegeEscalation: true

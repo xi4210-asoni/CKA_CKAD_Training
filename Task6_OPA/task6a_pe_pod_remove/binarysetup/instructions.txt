@@ -1,0 +1,10 @@
+curl http://localhost:8181/v1/data/disallow_pe_pods/violation -d @test_pod.json -H 'Content-Type: application/json'
+
+curl -X PUT --data-binary @disallow_privilege_escalation.rego http://localhost:8181/v1/policies/disallow_priprivilege_escalation
+curl -X POST --data-binary @test_pod.json   http://localhost:8181/v1/data/disallow_pe_pods/deny
+
+
+Blog for gatekeeper
+https://dev.to/thenjdevopsguy/writing-your-first-kubernetes-opa-policy-with-gatekeeper-145a
+
+https://medium.com/nerd-for-tech/opa-gatekeeper-on-kubernetes-69ca657c8631

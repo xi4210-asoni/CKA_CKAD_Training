@@ -1,0 +1,41 @@
+apiVersion: templates.gatekeeper.sh/v1beta1
+kind: ConstraintTemplate
+metadata:
+  name: disallowprivilegeescalation
+spec:
+  crd:
+    spec:
+      names:
+        kind: DisallowPrivilegeEscalation
+      validation:
+        openAPIV3Schema:
+          properties:
+            match:
+              properties:
+                kinds:
+                  items:
+                    properties:
+                      apiGroups:
+                        items:
+                          type: string
+                        type: array
+                      kinds:
+                        items:
+                          type: string
+                        type: array
+          required:
+            - match
+    # status:
+    #   acceptedValues: []
+  targets:
+    - target: admission.k8s.gatekeeper.sh
+      rego: |
+        package disallow_privilege_escalation
+
+        violation[{"msg": msg}] {
+          input.review.object.apiVersion == "v1"
+          input.review.object.kind == "Pod"
+          input.review.object.spec.containers[_].securityContext != null
+          input.review.object.spec.containers[_].securityContext.allowPrivilegeEscalation == true
+          msg = "Privilege escalation is disallowed for Pods"
+        }

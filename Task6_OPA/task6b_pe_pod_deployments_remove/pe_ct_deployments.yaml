@@ -1,0 +1,39 @@
+apiVersion: templates.gatekeeper.sh/v1beta1
+kind: ConstraintTemplate
+metadata:
+  name: disallowpedeployments
+spec:
+  crd:
+    spec:
+      names:
+        kind: DisallowPEdeployments
+      validation:
+        openAPIV3Schema:
+          properties:
+            match:
+              properties:
+                kinds:
+                  items:
+                    properties:
+                      apiGroups:
+                        items:
+                          type: string
+                        type: array
+                      kinds:
+                        items:
+                          type: string
+                        type: array
+          required:
+            - match
+  targets:
+    - target: admission.k8s.gatekeeper.sh
+      rego: |
+        package disallow_pe_deployments
+
+        violation[{"msg": msg}] {
+          input.review.object.apiVersion == "apps/v1"
+          input.review.object.kind == "Deployment"
+          input.review.object.spec.template.spec.containers[_].securityContext != null
+          input.review.object.spec.template.spec.containers[_].securityContext.allowPrivilegeEscalation == true
+          msg = "Privilege escalation is disallowed for Deployments"
+        }
